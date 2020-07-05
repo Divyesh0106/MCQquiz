@@ -14,25 +14,22 @@ class Login extends React.Component{
     }
 
     componentDidMount(){
-        console.log("In Login")
+
     }
 
     handleUsernameChange(e){
-        console.log("Username Changes:",e.target.value)
         this.setState({
             username : e.target.value
         })
     }
 
     handlePasswordChange(e){
-        console.log("Username Changes:",e.target.value)
         this.setState({
             password : e.target.value
         })
     }
 
     async onLogin(e){
-        console.log("State",this.state);
         e.preventDefault()
         if(this.state.username && this.state.username.length > 0 && this.state.password && this.state.password.length > 0){
             let user = {
@@ -40,9 +37,9 @@ class Login extends React.Component{
                 password : this.state.password           
             }
             let response = await instance.post('admin/user/login',user);
-            console.log("Response",response)
+            // console.log("Response",response)
             if(response.status){
-                localStorage.setItem('token',response.data._id)
+                localStorage.setItem('token',response.data.token)
                 localStorage.setItem('user',JSON.stringify(response.data))
                 window.location.reload()
             }
@@ -59,20 +56,20 @@ class Login extends React.Component{
     render(){
         return(
             <div>
-                <div class="loginbox">
+                <div class="loginbox" style={{"textAlign":"center"}}>
                 <h3>Login</h3>
                 <form name="loginform" onSubmit={(e)=>this.onLogin(e)}>
-                    <div>
+                    <div style={{"marginBottom":"10px"}}>
                         <label>
-                            Username
+                            Username : 
                         </label>
-                        <input name="username" type="text" maxLength="15" onChange={this.handleUsernameChange}/>
+                        {" "}<input name="username" type="text" maxLength="15" onChange={this.handleUsernameChange}/>
                     </div>
-                    <div>
+                    <div style={{"marginBottom":"10px"}}>
                         <label>
-                            Password
+                            Password : 
                         </label>
-                        <input name="username" type="password" maxLength="15" onChange={this.handlePasswordChange}/>
+                        {" "}<input name="username" type="password" maxLength="15" onChange={this.handlePasswordChange}/>
                     </div>
                     <div>
                         <button name="submit" type="submit">

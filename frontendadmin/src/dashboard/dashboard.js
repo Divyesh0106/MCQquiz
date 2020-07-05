@@ -33,7 +33,7 @@ class Dashboard extends React.Component{
     async getQuestionList(){
         let userId = authFunction.getUserId();
         let user = { userId }
-        let response = await instance.post('admin/question/listquestions',user);
+        let response = await instance.post('admin/question/listquestions',user,true);
         if(response.status){
             this.setState({
                 questions : response.data
@@ -77,7 +77,7 @@ class Dashboard extends React.Component{
     }
 
     handleOptionChanges(e){
-        console.log("Value",e.target.name,e.target.value)
+        // console.log("Value",e.target.name,e.target.value)
         this.setState({
             [e.target.name] : e.target.value
         })
@@ -139,7 +139,7 @@ class Dashboard extends React.Component{
 
     openEditModal(question){
 
-        console.log("Que",question)
+        // console.log("Que",question)
         this.setState({
             questionId : (question._id)?question._id:"",
             question : (question.question)?question.question:"",
@@ -237,34 +237,34 @@ class Dashboard extends React.Component{
                             </td>
                         </tr>
                         <tr>
-                            <td>
+                            <td style={{"textAlign":"left"}}>
                                 <label>Option A : </label>
                                 <input name="a" type="text" value={this.state.a} onChange={(e)=>{this.handleOptionChanges(e)}}/>
                             </td>
-                            <td>
+                            <td style={{"textAlign":"left"}}>
                                 <input name="is_answer" type="radio" value="a" checked={this.state.answer == "a"} onChange={(e)=>{this.handleRadiobutton(e)}}/>
                             </td>
-                            <td>
+                            <td style={{"textAlign":"left"}}>
                                 <label>Option B : </label>
                                 <input name="b" type="text" value={this.state.b} onChange={(e)=>{this.handleOptionChanges(e)}}/>
                             </td>
-                            <td>
+                            <td style={{"textAlign":"left"}}>
                                 <input name="is_answer" type="radio" value="b" checked={this.state.answer == "b"} onChange={(e)=>{this.handleRadiobutton(e)}}/>
                             </td>
                         </tr>
                         <tr>
-                            <td>
+                            <td style={{"textAlign":"left"}}>
                                 <label>Option C : </label>
                                 <input name="c" type="text" value={this.state.c} onChange={(e)=>{this.handleOptionChanges(e)}}/>
                             </td>
-                            <td>
+                            <td style={{"textAlign":"left"}}>
                                 <input name="is_answer" type="radio" value="c" checked={this.state.answer == "c"} onChange={(e)=>{this.handleRadiobutton(e)}}/>
                             </td>
-                            <td>
+                            <td style={{"textAlign":"left"}}>
                                 <label>Option D : </label>
                                 <input name="d" type="text" value={this.state.d} onChange={(e)=>{this.handleOptionChanges(e)}}/>
                             </td>
-                            <td>
+                            <td style={{"textAlign":"left"}}>
                                 <input name="is_answer" type="radio" value="d" checked={this.state.answer == "d"} onChange={(e)=>{this.handleRadiobutton(e)}}/>
                             </td>
                         </tr>

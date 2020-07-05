@@ -8,7 +8,7 @@ let response = {};
  * @requires userId
  * @returns  Array of Questions
  */
-router.post("/listquestions",(req,res)=>{
+router.post("/listquestions",functions.verifyTokenAdmin,(req,res)=>{
     var post = req.body;
     var required_params = ['userId'];
     var elem = functions.validateReqParam(post, required_params);
@@ -38,7 +38,7 @@ router.post("/listquestions",(req,res)=>{
  * @requires userId,question,a,b,c,d,answer
  * @returns  questionObject
  */
-router.post("/createquestion",(req,res)=>{
+router.post("/createquestion",functions.verifyTokenAdmin,(req,res)=>{
     var post = req.body;
     var required_params = ['userId','question','a','b','c','d','answer'];
     var elem = functions.validateReqParam(post, required_params);
@@ -77,7 +77,7 @@ router.post("/createquestion",(req,res)=>{
  * @requires (optional) question,a,b,c,d,answer
  * @returns questionObject
  */
-router.post("/updatequestion",(req,res)=>{  
+router.post("/updatequestion",functions.verifyTokenAdmin,(req,res)=>{  
     let post = req.body;  
     let updateObject = { status : 1 }
     if(typeof(post.question) !== "undefined" && post.question !== ""){
@@ -104,7 +104,7 @@ router.post("/updatequestion",(req,res)=>{
     var required_params = ['userId','questionId'];
     var elem = functions.validateReqParam(post, required_params);
     var valid = elem.missing.length == 0 && elem.blank.length == 0 && elem.invalid.length == 0;
-    console.log('update Object',updateObject)
+    // console.log('update Object',updateObject)
     if(valid){
         questionModel.updateQuestion(post.questionId,updateObject,(err,questionObj)=>{
             if(err){

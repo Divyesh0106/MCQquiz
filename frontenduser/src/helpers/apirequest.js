@@ -1,5 +1,6 @@
 import { BASE_URL } from "./config";
 import { authFunction } from "./auth";
+import { toast } from "react-toastify";
 
 const headers = (auth=false) => {
     if(auth){
@@ -17,7 +18,7 @@ const headers = (auth=false) => {
     post: async (url, data,auth=false) => {
       let options = {
         method: "POST",
-        headers: headers(),
+        headers: headers(auth),
         body: JSON.stringify(data)
       };
   
@@ -26,7 +27,17 @@ const headers = (auth=false) => {
           return response.json();
         })
         .then(resJson => {
-          return resJson;
+          // session expired or user auth failed
+          if(resJson.status === -2){
+            authFunction.logout()
+          }else{
+            if(resJson.status === false){
+              toast.error(resJson.message)
+              return resJson;
+            }else{
+              return resJson;
+            }
+          }
         });
     },   
     get: async (url) => {

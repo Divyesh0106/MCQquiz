@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs')
+var jwt = require('jsonwebtoken');
 const func = require('../../config/functions');
 const functions = func.func();
 const userModel = require('../../models/user');
@@ -19,7 +20,7 @@ router.post("/login",(req,res)=>{
         userModel.checkAdminUserExists(post['username'],(err,userObjects)=>{
             if(userObjects.length > 0){
                 bcrypt.compare(post['password'], userObjects[0].password, (err,result) => {
-                    console.log("Err",err,result,post,post['password'], userObjects[0].password)
+                    // console.log("Err",err,result,post,post['password'], userObjects[0].password)
                     if (result) { 
                         let customizeObject  = {
                             _id : userObjects[0]._id,
@@ -28,6 +29,10 @@ router.post("/login",(req,res)=>{
                             lastName : userObjects[0].lastName,
                             role :userObjects[0].role  
                         }
+                        let token = jwt.sign(customizeObject, process.env.JWT_SECRET_KEY, {
+                            expiresIn: 86400 // 1 day
+                        });
+                        customizeObject['token'] = token;
                         response = { status : true, message : "Login successfully.", data: customizeObject }
                         res.send(response);
                     }else{
@@ -50,14 +55,13 @@ router.post("/login",(req,res)=>{
     }
 })
 
-router.post("/userresults",(req,res)=>{
+router.post("/userresults",functions.verifyTokenAdmin,(req,res)=>{
     var post = req.body;
     var required_params = ['userId'];
     var elem = functions.validateReqParam(post, required_params);
     var valid = elem.missing.length == 0 && elem.blank.length == 0 && elem.invalid.length == 0;
     if(valid){
         quizModel.getAllQuizResult((err,results)=>{
-            console.log("ERRR ",err,results)
             if(err){
                 response = { status : false, message : "Oops! Something went wrong."}
                 res.send(response);

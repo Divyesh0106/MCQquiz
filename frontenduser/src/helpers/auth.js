@@ -1,7 +1,7 @@
 export const authFunction = {
         authCheck : function() {           
             let token = localStorage.getItem('token');
-            console.log("token",token)
+            // console.log("token",token)
             if (token) {
                 return true;    
             } else {        
@@ -10,7 +10,7 @@ export const authFunction = {
         },
         getToken : function(){
             let token = localStorage.getItem('token');
-            console.log("Token",token)
+            // console.log("Token",token)
             if (token) {
                 return token;
             } else {        
@@ -19,7 +19,7 @@ export const authFunction = {
         },
         getUserId : function(){
             let user = JSON.parse(localStorage.getItem('user'));
-            console.log("Token",user)
+            // console.log("Token",user)
             if (user && user._id) {        
                 return user._id;
             } else {        

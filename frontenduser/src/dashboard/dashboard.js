@@ -31,7 +31,7 @@ class Dashboard extends React.Component{
     }
 
     componentDidMount(){
-        this.getQuestions();
+        // this.getQuestions();
     }
 
     async getQuestions(){
@@ -40,7 +40,7 @@ class Dashboard extends React.Component{
         let response = await instance.post("question/listquestions",user,true)
         if(response.status){
             let temp_que_list = response.data.map((que)=>{return { '_id': que._id , 'answer': "" }})
-            console.log('temp_que_list',temp_que_list)
+            // console.log('temp_que_list',temp_que_list)
             this.setState({
                 questions : response.data,
                 total_questions : response.data.length,
@@ -50,6 +50,7 @@ class Dashboard extends React.Component{
     }
 
     startExam(){
+        this.getQuestions();
         let ths = this;
         this.timer = setInterval(function(){
             ths.setState({
@@ -104,7 +105,6 @@ class Dashboard extends React.Component{
     }
 
     openModal(correct_answer,total_question){
-        console.log("INSIDEL",correct_answer,total_question)
         this.setState({ 
             correct_answer : correct_answer,
             total_question : total_question
@@ -140,7 +140,7 @@ class Dashboard extends React.Component{
             timer           
         }
         let response = await instance.post('question/submitquiz',quizObject,true);
-        console.log("RESPONSE",response)
+        // console.log("RESPONSE",response)
         if(response.status){
             this.openModal(response.data.correct_answer,response.data.total_question)
             this.setState({
@@ -158,7 +158,7 @@ class Dashboard extends React.Component{
                 <Header/>
                 <div style={{"textAlign":"center"}}>
                     <h3>Welcome to MCQ Quiz!</h3>                
-                    {((!this.state.exam_started)&&this.state.questions.length > 0)?<button onClick={(e)=>{this.startExam()}}>Start Quiz</button>:null}
+                    {((!this.state.exam_started))?<button onClick={(e)=>{this.startExam()}}>Start Quiz</button>:null}
                     {(this.state.exam_started)?this.convertSecondtoTime(this.state.timer):null}
                 </div>
                 {(this.state.exam_started && this.state.questions.length > 0)?<div class="table">

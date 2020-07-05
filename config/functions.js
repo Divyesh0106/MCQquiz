@@ -1,3 +1,5 @@
+var jwt = require('jsonwebtoken');
+var userModel = require("../models/user");
 exports.func = function(){
     return {
         /* function to check whether required req param is exist in post or not*/
@@ -19,11 +21,9 @@ exports.func = function(){
                             let date_regex = /^(0[1-9]|1[012])[- /.] (0[1-9]|[12][0-9]|3[01])[- /.]/
                             if(!date_regex.test(post[reqparam[i]])){
                                 if(new Date(post[reqparam[i]]) == 'Invalid Date'){
-                                    console.log("IN1")
                                     invalid.push(reqparam[i])
                                 }
                             }else{
-                                console.log("IN2")
                                 invalid.push(reqparam[i])
                             }
                         }else if(reqparam[i]=='maxParticipants'){
@@ -77,6 +77,98 @@ exports.func = function(){
                 str = s4.join(' \n ');
             }
             return str;
-        }
+        },
+        verifyTokenAdmin : function(req,res,next){
+            var token = req.headers['token'];
+            // console.log('Token',token,req.body)
+            if(!token){
+                return res.send({
+                    status : -2,
+                    message : 'No token provided'
+                });
+            } else{
+                jwt.verify(token,process.env.JWT_SECRET_KEY,{ ignoreExpiration: true },function(err,decoded){
+                    // console.log("errrr==========>",err);
+                    if(err){
+                        if (err.name === 'TokenExpiredError') {
+                            return res.send({
+                                status : -2,
+                                message : 'JWT has expired. Please login again, this is for your security!'
+                            }); 
+                          }else{
+                            return res.send({
+                                status : -2,
+                                message : 'Failed to authenticate token.'
+                            }); 
+                          }                       
+                    } else{
+                        console.log("both id",decoded,decoded._id,req.body)
+                        if(req.body.userId != decoded._id){
+                            return res.send({
+                                status : -2,
+                                message : 'Failed to authenticate user.'
+                            }); 
+                        }else{
+                            userModel.getAdminUser(req.body.userId,(err,users)=>{
+                                if(users.length > 0){
+                                    next();
+                                }else{
+                                    return res.send({
+                                        status : -2,
+                                        message : 'User not found.'
+                                    }); 
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        },
+        verifyTokenUser : function(req,res,next){
+            var token = req.headers['token'];
+            // console.log('Token',token,req.body)
+            if(!token){
+                return res.send({
+                    status : -2,
+                    message : 'No token provided'
+                });
+            } else{
+                jwt.verify(token,process.env.JWT_SECRET_KEY,{ ignoreExpiration: true },function(err,decoded){
+                    // console.log("errrr==========>",err);
+                    if(err){
+                        if (err.name === 'TokenExpiredError') {
+                            return res.send({
+                                status : -2,
+                                message : 'JWT has expired. Please login again, this is for your security!'
+                            }); 
+                          }else{
+                            return res.send({
+                                status : -2,
+                                message : 'Failed to authenticate token.'
+                            }); 
+                          }                       
+                    } else{
+                        // console.log("both id",decoded,decoded._id,req.body)
+                        if(req.body.userId != decoded._id){
+                            return res.send({
+                                status : -2,
+                                message : 'Failed to authenticate user.'
+                            }); 
+                        }else{
+                            userModel.getUser(req.body.userId,(err,users)=>{
+                                if(users.length > 0){
+                                    next();
+                                }else{
+                                    return res.send({
+                                        status : -2,
+                                        message : 'User not found.'
+                                    }); 
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        }    
     }
 }

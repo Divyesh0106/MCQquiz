@@ -11,7 +11,7 @@ let response = {};
  * @requires userId
  * @returns  Array of Questions
  */
-router.post("/listquestions",(req,res)=>{
+router.post("/listquestions",functions.verifyTokenUser,(req,res)=>{
     var post = req.body;
     var required_params = ['userId'];
     var elem = functions.validateReqParam(post, required_params);
@@ -36,7 +36,7 @@ router.post("/listquestions",(req,res)=>{
     }
 })
 
-router.post("/submitquiz",(req,res)=>{
+router.post("/submitquiz",functions.verifyTokenUser,(req,res)=>{
     var post = req.body;
     var required_params = ['userId','attempted_question','total_question','timer'];
     var elem = functions.validateReqParam(post, required_params);
