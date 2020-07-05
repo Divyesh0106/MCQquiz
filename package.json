@@ -1,0 +1,31 @@
+{
+  "name": "eventmanagement",
+  "version": "1.0.0",
+  "description": "\"Event management apis for demo.\"",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "development": "SET NODE_ENV=development && npm start",
+    "staging": "SET NODE_ENV=staging  &&  npm start",
+    "production": "SET NODE_ENV=production  &&  npm start"
+  },
+  "keywords": [
+    "event"
+  ],
+  "author": "Divyesh Badrakiya",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "moment": "^2.27.0",
+    "mongoose": "^5.9.20"
+  },
+  "devDependencies": {
+    "eslint": "^7.3.1"
+  }
+}
